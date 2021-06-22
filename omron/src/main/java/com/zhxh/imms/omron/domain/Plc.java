@@ -10,5 +10,6 @@ public class PLC {
     private String ip;
     private int port;
     private String code;
+    private int maxDuration;
     private PlcRegister[] registers;
 }
