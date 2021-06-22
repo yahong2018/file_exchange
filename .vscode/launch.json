@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-OmronApplication<omron>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.zhxh.imms.omron.OmronApplication",
+            "projectName": "omron",
+            "args": ""
+        }
+    ]
+}

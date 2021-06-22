@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "code": "egr03_01",
+        "ip": "localhost",
+        "port": 9600,
+        "registers": [
+            {
+                "plcId": 1,
+                "fieldName": "A",
+                "fieldLegnth":10,
+                "area": "DM",
+                "addr": "0000",
+                "length": 2,
+                "chinese": "负间隙",
+                "japanese": "",
+                "readType": 0,
+                "updateRate":60000
+            },
+            {
+                "plcId": 1,
+                "fieldName": "B",
+                "fieldLegnth":10,
+                "area": "DM",
+                "addr": "0002",
+                "length": 2,
+                "chinese": "正间隙",
+                "japanese": "",
+                "readType": 0,
+                "updateRate":60000
+            }
+        ]
+    }
+]
