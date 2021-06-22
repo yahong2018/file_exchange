@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Plc {
+public class PLC {
     private long id;
     private String ip;
     private int port;

@@ -1,7 +1,7 @@
 package com.zhxh.imms.omron.controller;
 
 import com.zhxh.imms.omron.domain.PLcInitor;
-import com.zhxh.imms.omron.domain.Plc;
+import com.zhxh.imms.omron.domain.PLC;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ public class PLcController {
     private PLcInitor pLcInitor;
 
     @RequestMapping("getPlcList")
-    public Plc[] getPlcList(){
+    public PLC[] getPlcList(){
         return pLcInitor.getPlcList();
     }
 

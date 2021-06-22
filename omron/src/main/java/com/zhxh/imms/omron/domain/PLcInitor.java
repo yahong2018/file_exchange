@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PLcInitor {
-    private Plc[] plcList;
+    private PLC[] plcList;
 
-    public Plc[] getPlcList() {
+    public PLC[] getPlcList() {
         return plcList;
     }
 
@@ -31,7 +31,7 @@ public class PLcInitor {
 
         String jsonString = readFileContent(configFileName);
         Gson gson = new Gson();
-        this.plcList = gson.fromJson(jsonString, Plc[].class);
+        this.plcList = gson.fromJson(jsonString, PLC[].class);
     }
 
     private String getConfigFileName() {
