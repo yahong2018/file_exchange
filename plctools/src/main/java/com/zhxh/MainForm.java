@@ -1,13 +1,21 @@
 package com.zhxh;
 
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JTextField;
 
 import com.zhxh.imms.omron.backgroud.OmronPlc;
 import com.zhxh.imms.utils.ByteUtil;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 
 public class MainForm extends JFrame {
     private final static int MAX_WIDHT = 800;
