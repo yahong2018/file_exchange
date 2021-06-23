@@ -212,7 +212,7 @@ public class MainForm extends JFrame {
     private void createUI() {
         this.setTitle("Omron PLC 测试工具");
         this.setResizable(false);
-        this.setUndecorated(true);
+        // this.setUndecorated(true);
         this.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -276,7 +276,7 @@ public class MainForm extends JFrame {
 
     private JComboBox<String> createAreaComboBox() {
         JComboBox<String> combo = new JComboBox<String>();
-        combo.setPreferredSize(new Dimension(55, 25));
+        combo.setPreferredSize(new Dimension(85, 25));
         combo.addItem("CIO");
         combo.addItem("DM");
         combo.addItem("WR");
