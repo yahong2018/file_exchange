@@ -84,8 +84,8 @@ public class MainForm extends JFrame {
         return panelReadByWord;
     }
 
-    private JComboBox createAreaComboBox(){
-        JComboBox combo=new JComboBox();
+    private JComboBox<String> createAreaComboBox(){
+        JComboBox<String> combo=new JComboBox<String>();
         combo.setPreferredSize(new Dimension(55,25));
         combo.addItem("CIO");
         combo.addItem("DM");
