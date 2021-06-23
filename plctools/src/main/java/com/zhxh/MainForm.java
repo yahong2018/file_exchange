@@ -1,6 +1,5 @@
 package com.zhxh;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,68 +11,84 @@ public class MainForm extends JFrame {
 
     private JTextField textFieldIp;
     private JTextField textFieldPort;
-    private JComboBox comboBoxAreaByWord;
-    private JComboBox comboBoxAreaByBit;
+    private JComboBox<String> comboBoxAreaByWord;
+    private JComboBox<String> comboBoxAreaByBit;
     private JTextField textFieldAddrByWord;
+    private JTextField textFieldAddrByBit;
+    private JTextField textFieldIndex;
+    private JTextField textFieldParsedByWord;
+    private JTextField textFieldRawByWord;
+    private JTextField textFieldRawtByBit;
+    private JTextField textFieldParsedByBit;
 
-    public MainForm(){
+    private JButton connectButton;
+    private JButton disConnectButton;
+    private JButton shakeButton;
+    private JButton readByWordButton;
+    private JButton buttonBytes;
+    private JButton buttonInt;
+    private JButton buttonFloat;
+    private JButton buttonString;
+    private JButton readByBitButton;
+
+    public MainForm() {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         this.setTitle("Omron PLC 测试工具");
         this.setResizable(false);
         this.setUndecorated(true);
-        this.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);        
+        this.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));    
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-        this.add(createConnectPanel());       
-        this.add(createReadByWordPanel());    
+        this.add(createConnectPanel());
+        this.add(createReadByWordPanel());
         this.add(createReadByBitPanel());
 
-        this.setBounds(0, 0, MAX_WIDHT,MAX_HEIGHT);
-        this.setLocationRelativeTo(null);        
+        this.setBounds(0, 0, MAX_WIDHT, MAX_HEIGHT);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
-    }      
+    }
 
-    private JComponent createConnectPanel(){
+    private JComponent createConnectPanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("连接设置"));
 
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));      
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-        JLabel  ipLabel = new JLabel("IP：");        
+        JLabel ipLabel = new JLabel("IP：");
         panel.add(ipLabel);
-        this.textFieldIp = new JTextField(); //"255.255.255.255"
-        textFieldIp.setPreferredSize(new Dimension(120,25));
+        this.textFieldIp = new JTextField(); // "255.255.255.255"
+        textFieldIp.setPreferredSize(new Dimension(120, 25));
         panel.add(textFieldIp);
 
         JLabel portLabel = new JLabel("端口：");
         panel.add(portLabel);
         textFieldPort = new JTextField(); // 9600
-        textFieldPort.setPreferredSize(new Dimension(60,25));
+        textFieldPort.setPreferredSize(new Dimension(60, 25));
         panel.add(textFieldPort);
 
-        JButton connectButton = new JButton("连接");
+        this.connectButton = new JButton("连接");
         panel.add(connectButton);
 
-        JButton disConnectButton = new JButton("断开");
+        this.disConnectButton = new JButton("断开");
         disConnectButton.setEnabled(false);
         panel.add(disConnectButton);
 
         JLabel label = new JLabel();
-        label.setPreferredSize(new Dimension(100,25));
+        label.setPreferredSize(new Dimension(100, 25));
         panel.add(label);
-        JButton shakeButton = new JButton("握手");
+        this.shakeButton = new JButton("握手");
         shakeButton.setEnabled(false);
         panel.add(shakeButton);
 
         return panel;
     }
 
-    private JComponent createReadByWordPanel(){
-        JPanel panelReadByWord = new JPanel();        
-        panelReadByWord.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));    
-        panelReadByWord.setPreferredSize(new Dimension(MAX_WIDHT, 210));     
+    private JComponent createReadByWordPanel() {
+        JPanel panelReadByWord = new JPanel();
+        panelReadByWord.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelReadByWord.setPreferredSize(new Dimension(MAX_WIDHT, 210));
         panelReadByWord.setBorder(BorderFactory.createTitledBorder("按字读取"));
 
         panelReadByWord.add(createReadByWordReadPanel());
@@ -84,9 +99,9 @@ public class MainForm extends JFrame {
         return panelReadByWord;
     }
 
-    private JComboBox<String> createAreaComboBox(){
-        JComboBox<String> combo=new JComboBox<String>();
-        combo.setPreferredSize(new Dimension(55,25));
+    private JComboBox<String> createAreaComboBox() {
+        JComboBox<String> combo = new JComboBox<String>();
+        combo.setPreferredSize(new Dimension(55, 25));
         combo.addItem("CIO");
         combo.addItem("DM");
         combo.addItem("WR");
@@ -96,96 +111,95 @@ public class MainForm extends JFrame {
         return combo;
     }
 
-    private JComponent createReadByWordReadPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByWordReadPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelArea = new JLabel("区域：");
         panel.add(labelArea);
 
-        this.comboBoxAreaByWord = createAreaComboBox();      
+        this.comboBoxAreaByWord = createAreaComboBox();
         panel.add(this.comboBoxAreaByWord);
 
         JLabel labelAddr = new JLabel("地址：");
         panel.add(labelAddr);
         this.textFieldAddrByWord = new JTextField();
-        textFieldAddrByWord.setPreferredSize(new Dimension(70,25));
+        textFieldAddrByWord.setPreferredSize(new Dimension(70, 25));
         panel.add(textFieldAddrByWord);
 
         JLabel labelLength = new JLabel("长度：");
         panel.add(labelLength);
         JTextField lengthText = new JTextField();
-        lengthText.setPreferredSize(new Dimension(50,25));
+        lengthText.setPreferredSize(new Dimension(50, 25));
         panel.add(lengthText);
 
-        JButton readButton = new JButton("读取");
-        readButton.setEnabled(false);
-        panel.add(readButton);
+        this.readByWordButton = new JButton("读取");
+        readByWordButton.setEnabled(false);
+        panel.add(readByWordButton);
 
         JLabel label = new JLabel();
-        label.setPreferredSize(new Dimension(180,30));
+        label.setPreferredSize(new Dimension(180, 30));
         panel.add(label);
 
         return panel;
     }
 
-    private JComponent createReadByWordResultPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByWordResultPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelResult = new JLabel("返回结果：");
-        labelResult.setPreferredSize(new Dimension(80,25));
+        labelResult.setPreferredSize(new Dimension(80, 25));
         panel.add(labelResult);
-        JTextField rawText = new JTextField();
-        rawText.setPreferredSize(new Dimension(650,25));
-        panel.add(rawText);
-        rawText.setEnabled(false);
+        this.textFieldRawByWord = new JTextField();
+        textFieldRawByWord.setPreferredSize(new Dimension(650, 25));
+        panel.add(textFieldRawByWord);
+        textFieldRawByWord.setEnabled(false);
 
         return panel;
     }
 
-    private JComponent createReadByWordParsedResultPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByWordParsedResultPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelResult = new JLabel("解析后结果：");
-        labelResult.setPreferredSize(new Dimension(80,25));
+        labelResult.setPreferredSize(new Dimension(80, 25));
         panel.add(labelResult);
-        
-        JTextField parsedText = new JTextField();
-        parsedText.setPreferredSize(new Dimension(650,25));
-        panel.add(parsedText);
+        this.textFieldParsedByWord = new JTextField();
+        textFieldParsedByWord.setPreferredSize(new Dimension(650, 25));
+        panel.add(textFieldParsedByWord);
 
         return panel;
     }
 
-    private JComponent createReadByWordConvertorPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByWordConvertorPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel label = new JLabel();
-        label.setPreferredSize(new Dimension(80,25));
+        label.setPreferredSize(new Dimension(80, 25));
         panel.add(label);
 
-        JButton buttonBytes = new JButton("字节");
+        this.buttonBytes = new JButton("字节");
         panel.add(buttonBytes);
 
-        JButton buttonInt = new JButton("整数");
+        this.buttonInt = new JButton("整数");
         panel.add(buttonInt);
 
-        JButton buttonFloat = new JButton("浮点");
+        this.buttonFloat = new JButton("浮点");
         panel.add(buttonFloat);
 
-        JButton buttonString = new JButton("字符");
+        this.buttonString = new JButton("字符");
         panel.add(buttonString);
 
         return panel;
     }
 
-    private JComponent createReadByBitPanel(){
-        JPanel panelReadByBit = new JPanel();        
-        panelReadByBit.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));    
-        panelReadByBit.setPreferredSize(new Dimension(MAX_WIDHT, 190));     
+    private JComponent createReadByBitPanel() {
+        JPanel panelReadByBit = new JPanel();
+        panelReadByBit.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelReadByBit.setPreferredSize(new Dimension(MAX_WIDHT, 190));
         panelReadByBit.setBorder(BorderFactory.createTitledBorder("按位读取"));
 
         panelReadByBit.add(createReadByBitReadPanel());
@@ -195,9 +209,9 @@ public class MainForm extends JFrame {
         return panelReadByBit;
     }
 
-    private JComponent createReadByBitReadPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByBitReadPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelArea = new JLabel("区域：");
         panel.add(labelArea);
@@ -206,53 +220,52 @@ public class MainForm extends JFrame {
 
         JLabel labelAddr = new JLabel("地址：");
         panel.add(labelAddr);
-        JTextField addrText = new JTextField();
-        addrText.setPreferredSize(new Dimension(70,25));
-        panel.add(addrText);
+        this.textFieldAddrByBit = new JTextField();
+        textFieldAddrByBit.setPreferredSize(new Dimension(70, 25));
+        panel.add(textFieldAddrByBit);
 
         JLabel labelIndex = new JLabel("索引：");
         panel.add(labelIndex);
-        JTextField indexText = new JTextField();
-        indexText.setPreferredSize(new Dimension(50,25));
-        panel.add(indexText);
+        this.textFieldIndex = new JTextField();
+        textFieldIndex.setPreferredSize(new Dimension(50, 25));
+        panel.add(textFieldIndex);
 
-        JButton readButton = new JButton("读取");
-        readButton.setEnabled(false);
-        panel.add(readButton);
+        this.readByBitButton = new JButton("读取");
+        readByBitButton.setEnabled(false);
+        panel.add(readByBitButton);
 
         JLabel label = new JLabel();
-        label.setPreferredSize(new Dimension(180,30));
+        label.setPreferredSize(new Dimension(180, 30));
         panel.add(label);
 
         return panel;
     }
 
-    private JComponent createReadByBitResultPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByBitResultPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelResult = new JLabel("返回结果：");
-        labelResult.setPreferredSize(new Dimension(80,25));
+        labelResult.setPreferredSize(new Dimension(80, 25));
         panel.add(labelResult);
-        JTextField rawText = new JTextField();
-        rawText.setPreferredSize(new Dimension(650,25));
-        panel.add(rawText);
-        rawText.setEnabled(false);
+        this.textFieldRawtByBit = new JTextField();
+        textFieldRawtByBit.setPreferredSize(new Dimension(650, 25));
+        panel.add(textFieldRawtByBit);
+        textFieldRawtByBit.setEnabled(false);
 
         return panel;
     }
 
-    private JComponent createReadByBitParsedResultPanel(){
-        JPanel panel = new JPanel();        
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));  
+    private JComponent createReadByBitParsedResultPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel labelResult = new JLabel("解析后结果：");
-        labelResult.setPreferredSize(new Dimension(80,25));
+        labelResult.setPreferredSize(new Dimension(80, 25));
         panel.add(labelResult);
-        
-        JTextField parsedText = new JTextField();
-        parsedText.setPreferredSize(new Dimension(650,25));
-        panel.add(parsedText);
+        this.textFieldParsedByBit = new JTextField();
+        textFieldParsedByBit.setPreferredSize(new Dimension(650, 25));
+        panel.add(textFieldParsedByBit);
 
         return panel;
     }
