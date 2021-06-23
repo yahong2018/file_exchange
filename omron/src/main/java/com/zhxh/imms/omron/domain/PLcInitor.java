@@ -5,9 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-
 import com.google.gson.Gson;
+import com.zhxh.imms.omron.backgroud.TaskConfig;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -16,22 +15,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PLcInitor {
-    private PLC[] plcList;
 
-    public PLC[] getPlcList() {
-        return plcList;
+    public TaskConfig getTaskConfig(){
+        TaskConfig config = new TaskConfig();
+        config.setAutStart(false);   //默认手工启动
+        config.setConnectionCheckDuration(5*60);//连接检查间隔，单位为秒，默认为5分钟
+        config.setDisConnectLogDuration(60); //网络断线日志间隔，单位为秒，默认为1分钟
+
+        return config;
     }
 
-    @PostConstruct
-    private void initPLcList() {
+    public PLC[] getPlcList() {
+        //可以从配置文件或者数据库中加载PLC的配置数据，测试系统从配置文件中加载
+        PLC[] plcList;
         String configFileName = this.getConfigFileName();
         if (configFileName == null) {
-            return;
+            return null;
         }
 
         String jsonString = readFileContent(configFileName);
         Gson gson = new Gson();
-        this.plcList = gson.fromJson(jsonString, PLC[].class);
+        plcList = gson.fromJson(jsonString, PLC[].class);
+
+        return plcList;
     }
 
     private String getConfigFileName() {

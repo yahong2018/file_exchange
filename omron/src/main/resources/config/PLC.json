@@ -4,6 +4,8 @@
         "code": "egr03_01",
         "ip": "localhost",
         "port": 9600,
+        "inUse":true,
+        "maxDuration":60000,
         "registers": [
             {
                 "plcId": 1,

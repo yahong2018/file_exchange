@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "com.zhxh.App"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-OmronApplication<omron>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
