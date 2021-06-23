@@ -1,6 +1,10 @@
 package com.zhxh;
 
 import javax.swing.*;
+
+import com.zhxh.imms.omron.backgroud.OmronPlc;
+import com.zhxh.imms.utils.ByteUtil;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -20,6 +24,7 @@ public class MainForm extends JFrame {
     private JTextField textFieldRawByWord;
     private JTextField textFieldRawtByBit;
     private JTextField textFieldParsedByBit;
+    private JTextField textFieldLength;
 
     private JButton connectButton;
     private JButton disConnectButton;
@@ -30,10 +35,173 @@ public class MainForm extends JFrame {
     private JButton buttonFloat;
     private JButton buttonString;
     private JButton readByBitButton;
+    private JButton verifyButton;
+
+    private byte[] lastWordBuffer = new byte[] {};
+    private byte[] lastBitBuffer = new byte[] {};
+    private byte[] lastDataBuffer = new byte[] {};
+
+    private OmronPlc omronPlc = new OmronPlc();
 
     public MainForm() {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
+        createUI();
+        createEventListeners();
+
+        this.setVisible(true);
+    }
+
+    private void connect() {
+        String ip = this.textFieldIp.getText();
+        String strPort = this.textFieldPort.getText();
+        if (ip.isEmpty() || strPort.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "IP地址和端口都必须输入！", "系统提示", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            int port = Integer.parseInt(strPort);
+            this.omronPlc.setIp(ip);
+            this.omronPlc.setPort(port);
+
+            this.omronPlc.connect();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "系统连接出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            return;
+        }
+
+        this.onConnected();
+    }
+
+    private void disConnect() {
+        this.omronPlc.disConnect();
+
+        this.onDisConnected();
+    }
+
+    private void shakeHand() {
+        System.out.println("shakeHand");
+
+        this.onShakeHand();
+    }
+
+    private void readByWord() {
+        String area = this.comboBoxAreaByWord.getSelectedItem().toString();
+        String addr = this.textFieldAddrByWord.getText();
+        String strLength = this.textFieldLength.getText();
+        if (area.isEmpty() || addr.isEmpty() || strLength.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "区域、地址和长度都必须输入！", "系统提示", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            int length = Integer.parseInt(strLength);
+            byte[] buffer = new byte[1024];
+            int readLength = this.omronPlc.rawRead(area, addr, length, buffer, 0);
+            this.lastWordBuffer = new byte[readLength];
+            System.arraycopy(buffer, 0, this.lastDataBuffer, 0, readLength);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "按字读取出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void reslultToBytes() {
+        System.out.println("reslultToBytes");
+    }
+
+    private void resultToInt() {
+        System.out.println("resultToInt");
+    }
+
+    private void resultToFloat() {
+        System.out.println("resultToFloat");
+    }
+
+    private void resultToString() {
+        System.out.println("resultToString");
+    }
+
+    private void readByBit() {
+        String area = this.comboBoxAreaByBit.getSelectedItem().toString();
+        String addr = this.textFieldAddrByBit.getText();
+        String strIndex = this.textFieldIndex.getText();
+        if (area.isEmpty() || addr.isEmpty() || strIndex.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "区域、地址和索引都必须输入！", "系统提示", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            int index = Integer.parseInt(strIndex);
+            byte[] buffer = new byte[1024];
+            int readLength = this.omronPlc.rawRead(area, addr, index, buffer, 0);
+            this.lastBitBuffer = new byte[readLength];
+            System.arraycopy(buffer, 0, this.lastBitBuffer, 0, readLength);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "按位读取出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void verify() {
+        try {
+            this.lastDataBuffer = this.omronPlc.verifyResultBuffer(this.lastWordBuffer,
+                    Integer.parseInt(this.textFieldLength.getText()));
+
+            this.textFieldParsedByWord.setText(ByteUtil.bytesToHex(this.lastDataBuffer));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "校验出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void onConnected() {
+        this.disConnectButton.setEnabled(true);
+        this.shakeButton.setEnabled(true);
+        this.connectButton.setEnabled(false);
+
+        this.onShakeHand();
+    }
+
+    private void onShakeHand() {
+        this.readByWordButton.setEnabled(true);
+        this.readByBitButton.setEnabled(true);
+        this.buttonBytes.setEnabled(true);
+        this.buttonInt.setEnabled(true);
+        this.buttonFloat.setEnabled(true);
+        this.buttonString.setEnabled(true);
+        this.verifyButton.setEnabled(true);
+
+        // this.shakeButton.setEnabled(false);
+    }
+
+    private void onDisConnected() {
+        this.readByWordButton.setEnabled(false);
+        this.readByBitButton.setEnabled(false);
+        this.buttonBytes.setEnabled(false);
+        this.buttonInt.setEnabled(false);
+        this.buttonFloat.setEnabled(false);
+        this.buttonString.setEnabled(false);
+
+        // this.shakeButton.setEnabled(false);
+        this.disConnectButton.setEnabled(false);
+        this.verifyButton.setEnabled(false);
+    }
+
+    private void createEventListeners() {
+        this.connectButton.addActionListener(e -> connect());
+        this.disConnectButton.addActionListener(e -> disConnect());
+        this.shakeButton.addActionListener(e -> shakeHand());
+        this.readByWordButton.addActionListener(e -> readByWord());
+        this.buttonBytes.addActionListener(e -> reslultToBytes());
+        this.buttonInt.addActionListener(e -> resultToInt());
+        this.buttonFloat.addActionListener(e -> resultToFloat());
+        this.buttonString.addActionListener(e -> resultToString());
+        this.readByBitButton.addActionListener(e -> readByBit());
+        this.verifyButton.addActionListener(e -> verify());
+    }
+
+    private void createUI() {
         this.setTitle("Omron PLC 测试工具");
         this.setResizable(false);
         this.setUndecorated(true);
@@ -47,7 +215,6 @@ public class MainForm extends JFrame {
 
         this.setBounds(0, 0, MAX_WIDHT, MAX_HEIGHT);
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 
     private JComponent createConnectPanel() {
@@ -129,9 +296,9 @@ public class MainForm extends JFrame {
 
         JLabel labelLength = new JLabel("长度：");
         panel.add(labelLength);
-        JTextField lengthText = new JTextField();
-        lengthText.setPreferredSize(new Dimension(50, 25));
-        panel.add(lengthText);
+        this.textFieldLength = new JTextField();
+        textFieldLength.setPreferredSize(new Dimension(50, 25));
+        panel.add(textFieldLength);
 
         this.readByWordButton = new JButton("读取");
         readByWordButton.setEnabled(false);
@@ -181,16 +348,24 @@ public class MainForm extends JFrame {
         label.setPreferredSize(new Dimension(80, 25));
         panel.add(label);
 
+        this.verifyButton = new JButton("校验");
+        verifyButton.setEnabled(false);
+        panel.add(verifyButton);
+
         this.buttonBytes = new JButton("字节");
+        buttonBytes.setEnabled(false);
         panel.add(buttonBytes);
 
         this.buttonInt = new JButton("整数");
+        buttonInt.setEnabled(false);
         panel.add(buttonInt);
 
         this.buttonFloat = new JButton("浮点");
+        buttonFloat.setEnabled(false);
         panel.add(buttonFloat);
 
         this.buttonString = new JButton("字符");
+        buttonString.setEnabled(false);
         panel.add(buttonString);
 
         return panel;
