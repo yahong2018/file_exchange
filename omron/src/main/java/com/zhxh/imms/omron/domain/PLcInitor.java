@@ -19,7 +19,7 @@ public class PLcInitor {
     public TaskConfig getTaskConfig(){
         TaskConfig config = new TaskConfig();
         config.setAutoStart(false);   //默认手工启动
-        config.setConnectionCheckDuration(5*60);//连接检查间隔，单位为秒，默认为5分钟
+        config.setConnectionCheckDuration(5*60);//连接检查间，隔单位为秒，默认为5分钟
         config.setDisConnectLogDuration(60); //网络断线日志间隔，单位为秒，默认为1分钟
 
         return config;
