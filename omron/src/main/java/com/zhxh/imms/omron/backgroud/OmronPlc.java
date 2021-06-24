@@ -95,7 +95,7 @@ public class OmronPlc {
     }
 
     public float readFloat(String area,String addr,int length){
-        byte[] floatBuffer = this.getNumberBytes(area, addr,length, length * 2, 4, 2, "Float");       
+        byte[] floatBuffer = this.getNumberBytes(area, addr,length, 4, 2, "Float");       
         float result = ByteUtil.bytes2Float(floatBuffer);
         return result;
     }
@@ -125,7 +125,8 @@ public class OmronPlc {
         return true;        
     }
 
-    private byte[] getNumberBytes(String area,String addr,int length,int byteLength,int MAX_BYTES,int MAX_WORD,String DATA_TYPE){
+    private byte[] getNumberBytes(String area,String addr,int length,int MAX_BYTES,int MAX_WORD,String DATA_TYPE){
+        int byteLength = length * 2;
         if (byteLength > MAX_BYTES) {
             throw new BusinessException(addr + "的配置错误：" + DATA_TYPE + "的长度最大是" + MAX_WORD + "个字，" + MAX_BYTES
                     + "个字节，配置为" + length + "字，" + byteLength + "字节.");
@@ -139,7 +140,7 @@ public class OmronPlc {
     }
 
     public int readInt(String area,String addr,int length){
-        byte[] intBuffer = this.getNumberBytes(area, addr,length, length * 2, 4, 2, "Int");
+        byte[] intBuffer = this.getNumberBytes(area, addr,length, 4, 2, "Int");
         int result = ByteUtil.bytes2Int(intBuffer); 
         return result;
     }

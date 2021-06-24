@@ -16,8 +16,6 @@ public class PlcRegister {
     private int indexOrLength; // 长度    
     private String chinese; // 中文
     private String japanese; // 日文
-    private int readType; // 读取方式： 0 按字读取，每次读取N个字<N*2个字节> 1 按位读取，每次读取N个位
-    private int updateRate; //数据更新频率
 
     public final static int READ_TYPE_WORD = 0;
     public final static int READ_TYPE_BIT = 1;
