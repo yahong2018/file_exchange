@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskConfig {
-    private boolean autStart; 
+    private boolean autoStart; 
     private int connectionCheckDuration; 
     private int disConnectLogDuration; 
 }

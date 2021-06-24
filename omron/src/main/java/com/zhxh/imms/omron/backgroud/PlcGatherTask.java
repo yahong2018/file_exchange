@@ -22,15 +22,11 @@ public class PlcGatherTask {
     @Autowired
     private PLcInitor initor;
 
-    private boolean autoStart;
     private boolean running;
     private Thread checkThread;
     private TaskConfig taskConfig;
     private List<PlcGatherThread> threadList = new ArrayList<>();
     
-    public boolean isAutoStart() {
-        return autoStart;
-    }
         
     private void init(){
         threadList.clear();
@@ -46,10 +42,8 @@ public class PlcGatherTask {
 
     @PostConstruct
     private void autoStart(){
-        this.autoStart = false; //正式系统从配置文件中获取
-
         this.init();
-        if(this.isAutoStart()){
+        if(this.taskConfig.isAutoStart()){
             this.start();
         }
     }

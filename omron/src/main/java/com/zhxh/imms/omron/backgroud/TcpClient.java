@@ -100,16 +100,13 @@ public class TcpClient {
         if (this.isConnected()) {
             return true;
         }
-        this.socket = new Socket();
+        
         if (this.socketAddress == null) {
             this.socketAddress = new InetSocketAddress(this.ip, this.port);
         }
 
         try {
-            if (this.socket.isConnected() && !this.socket.isClosed()) {
-                this.socket.close();
-            }
-
+            this.socket = new Socket();
             this.socket.connect(this.socketAddress, this.connectionTimeout);
             this.aborted = false;
             this.outputStream = this.socket.getOutputStream();
