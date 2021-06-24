@@ -47,12 +47,12 @@ public class MainForm extends JFrame {
 
     private byte[] lastWordBuffer = new byte[] {};
     private byte[] lastBitBuffer = new byte[] {};
-    private byte[] lastDataBuffer = new byte[] {};
+    private byte[] dataBuffer = new byte[] {};
 
     private OmronPlc omronPlc = new OmronPlc();
 
     public MainForm() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame.setDefaultLookAndFeelDecorated(false);
 
         createUI();
         createEventListeners();
@@ -107,7 +107,7 @@ public class MainForm extends JFrame {
             byte[] buffer = new byte[1024];
             int readLength = this.omronPlc.rawRead(area, addr, length, buffer, 0);
             this.lastWordBuffer = new byte[readLength];
-            System.arraycopy(buffer, 0, this.lastDataBuffer, 0, readLength);
+            System.arraycopy(buffer, 0, this.dataBuffer, 0, readLength);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "按字读取出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
@@ -116,19 +116,23 @@ public class MainForm extends JFrame {
     }
 
     private void reslultToBytes() {
-        System.out.println("reslultToBytes");
+        String hexString = ByteUtil.bytesToHex(this.dataBuffer);
+        this.textFieldParsedByWord.setText(hexString);
     }
 
     private void resultToInt() {
-        System.out.println("resultToInt");
+        Integer intResult =  ByteUtil.bytes2Int(this.dataBuffer);
+        this.textFieldParsedByWord.setText(intResult.toString());
     }
 
     private void resultToFloat() {
-        System.out.println("resultToFloat");
+        Float floatResult = ByteUtil.bytes2Float(this.dataBuffer);
+        this.textFieldParsedByWord.setText(floatResult.toString());
     }
 
     private void resultToString() {
-        System.out.println("resultToString");
+        String strResult = new String(this.dataBuffer);
+        this.textFieldParsedByWord.setText(strResult);
     }
 
     private void readByBit() {
@@ -153,10 +157,10 @@ public class MainForm extends JFrame {
 
     private void verify() {
         try {
-            this.lastDataBuffer = this.omronPlc.verifyResultBuffer(this.lastWordBuffer,
+            this.dataBuffer = this.omronPlc.verifyResultBuffer(this.lastWordBuffer,
                     Integer.parseInt(this.textFieldLength.getText()));
 
-            this.textFieldParsedByWord.setText(ByteUtil.bytesToHex(this.lastDataBuffer));
+            this.textFieldParsedByWord.setText(ByteUtil.bytesToHex(this.dataBuffer));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "校验出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -213,7 +217,7 @@ public class MainForm extends JFrame {
         this.setTitle("Omron PLC 测试工具");
         this.setResizable(false);
         // this.setUndecorated(true);
-        this.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);
+        // this.getRootPane().setWindowDecorationStyle(JRootPane.INFORMATION_DIALOG);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 

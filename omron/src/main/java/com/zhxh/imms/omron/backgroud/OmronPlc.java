@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import com.zhxh.imms.omron.domain.PLC;
 import com.zhxh.imms.utils.BusinessException;
+import com.zhxh.imms.utils.ByteUtil;
 
 public class OmronPlc {
     protected TcpClient tcpClient;
@@ -94,9 +95,8 @@ public class OmronPlc {
     }
 
     public float readFloat(String area,String addr,int length){
-        byte[] floatBuffer = this.getNumberBytes(area, addr,length, length * 2, 4, 2, "Float");
-        int intValue = this.bytes2Int(floatBuffer);
-        float result = Float.intBitsToFloat(intValue);
+        byte[] floatBuffer = this.getNumberBytes(area, addr,length, length * 2, 4, 2, "Float");       
+        float result = ByteUtil.bytes2Float(floatBuffer);
         return result;
     }
 
@@ -140,13 +140,10 @@ public class OmronPlc {
 
     public int readInt(String area,String addr,int length){
         byte[] intBuffer = this.getNumberBytes(area, addr,length, length * 2, 4, 2, "Int");
-        int result = this.bytes2Int(intBuffer); 
+        int result = ByteUtil.bytes2Int(intBuffer); 
         return result;
     }
 
-    private int bytes2Int(byte[] intBuffer){
-        return  ((intBuffer[3] << 24) &0xFF000000) | ((intBuffer[2] << 16) &0xFF00)  | ((intBuffer[1] << 8) &0xFF) | intBuffer[0]; 
-    }   
 
     private byte[] doRead(byte[] command, int length) {
         if (this.tcpClient.write(command) != command.length) {
