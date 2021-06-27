@@ -107,7 +107,11 @@ public class MainForm extends JFrame {
             byte[] buffer = new byte[1024];
             int readLength = this.omronPlc.rawRead(area, addr, length, buffer, 0);
             this.lastWordBuffer = new byte[readLength];
-            System.arraycopy(buffer, 0, this.dataBuffer, 0, readLength);
+            System.arraycopy(buffer, 0, this.lastWordBuffer, 0, readLength);
+            int dataLength = length * 2;
+            this.dataBuffer = new byte[dataLength];
+            this.textFieldRawByWord.setText(ByteUtil.bytesToHex(this.lastWordBuffer));
+            System.arraycopy(this.lastWordBuffer, readLength - dataLength, this.dataBuffer,0, dataLength);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "按字读取出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
@@ -149,6 +153,8 @@ public class MainForm extends JFrame {
             int readLength = this.omronPlc.rawRead(area, addr, index, buffer, 0);
             this.lastBitBuffer = new byte[readLength];
             System.arraycopy(buffer, 0, this.lastBitBuffer, 0, readLength);
+
+            this.textFieldRawtByBit.setText(ByteUtil.bytesToHex(this.lastBitBuffer));        
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "按位读取出现错误:" + e.getMessage(), "系统提示", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
