@@ -19,7 +19,7 @@ import com.zhxh.imms.utils.ByteUtil;
 
 public class MainForm extends JFrame {
     private final static int MAX_WIDHT = 800;
-    private final static int MAX_HEIGHT = 500;
+    private final static int MAX_HEIGHT = 550;
 
     private JTextField textFieldIp;
     private JTextField textFieldPort;
@@ -150,7 +150,7 @@ public class MainForm extends JFrame {
         try {
             int index = Integer.parseInt(strIndex);
             byte[] buffer = new byte[1024];
-            int readLength = this.omronPlc.rawRead(area, addr, index, buffer, 0);
+            int readLength = this.omronPlc.rawRead(area, addr, index, buffer, 1);
             this.lastBitBuffer = new byte[readLength];
             System.arraycopy(buffer, 0, this.lastBitBuffer, 0, readLength);
 
