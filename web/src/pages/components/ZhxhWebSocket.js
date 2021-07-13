@@ -88,6 +88,7 @@ export class WebSocketProxy {
                     me.onConnected();
                 }
             };
+            
             websocket.onerror = function (evt) {
                 console.log("web socked error");
 
@@ -101,6 +102,7 @@ export class WebSocketProxy {
                 me.network_status = 4;
                 if (me.ping) {
                     clearInterval(me.ping);
+                    me.ping = null;
                 }
 
                 if (me.onClose) {
