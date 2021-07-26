@@ -164,7 +164,7 @@ public class MainForm extends JFrame {
     private void verify() {
         try {
             this.dataBuffer = this.omronPlc.verifyResultBuffer(this.lastWordBuffer,
-                    Integer.parseInt(this.textFieldLength.getText()));
+                    Integer.parseInt(this.textFieldLength.getText())*2);
 
             this.textFieldParsedByWord.setText(ByteUtil.bytesToHex(this.dataBuffer));
         } catch (Exception e) {

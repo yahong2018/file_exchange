@@ -16,7 +16,7 @@ public class ByteUtil {
             hex.append(HEXES[b & 0x0F]).append("-");
         }
 
-        hex.deleteCharAt(hex.length()-1);
+        hex.deleteCharAt(hex.length() - 1);
 
         return hex.toString();
     }
@@ -44,12 +44,12 @@ public class ByteUtil {
         byte[] intBuffer = new byte[4];
         System.arraycopy(buffer, 0, intBuffer, 4 - buffer.length, buffer.length);
 
-        int result = (intBuffer[0] << 24) | (intBuffer[1] << 16) | (intBuffer[2] << 8) | intBuffer[3];
+        int result = ((intBuffer[0] & 0xFF)<<24) | ((intBuffer[1] & 0xFF) << 16) | ((intBuffer[2] & 0xFF) << 8)
+                | (intBuffer[3] & 0xFF);
         return result;
     }
 
-
-    public static float bytes2Float(byte[] buffer){
+    public static float bytes2Float(byte[] buffer) {
         int intResult = bytes2Int(buffer);
         float result = Float.intBitsToFloat(intResult);
         return result;
