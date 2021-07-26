@@ -202,6 +202,7 @@ public class MainForm extends JFrame {
         this.buttonString.setEnabled(false);
 
         // this.shakeButton.setEnabled(false);
+        this.connectButton.setEnabled(true);
         this.disConnectButton.setEnabled(false);
         this.verifyButton.setEnabled(false);
     }
